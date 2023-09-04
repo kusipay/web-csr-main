@@ -11,7 +11,7 @@ function App() {
     <div>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Typography className="app">Kusipay</Typography>
+        <Typography className="app">New change</Typography>
         <Button variant="contained">Go</Button>
       </ThemeProvider>
     </div>
