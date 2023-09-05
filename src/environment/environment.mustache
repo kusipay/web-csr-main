@@ -1,0 +1,19 @@
+const environment: {
+  baseUrl: string;
+  auth: {
+    domain: string;
+    clientId: string;
+    redirectUri: string;
+    scope: string;
+    state: string;
+  };
+} = {
+  baseUrl: "{{BASE_URL}}",
+  auth: {
+    domain: "{{COGNITO_DOMAIN}}",
+    clientId: "{{COGNITO_CLIENT_ID}}",
+    redirectUri: "{{COGNITO_REDIRECT_URI}}",
+    scope: "{{COGNITO_SCOPES}}",
+    state: "{{COGNITO_STATE}}"
+  }
+};
