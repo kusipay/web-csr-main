@@ -10,9 +10,9 @@ const environment: {
 } = {
   baseUrl: "{{BASE_URL}}",
   auth: {
-    domain: "{{COGNITO_DOMAIN}}",
+    domain: "{{&COGNITO_DOMAIN}}",
     clientId: "{{COGNITO_CLIENT_ID}}",
-    redirectUri: "{{COGNITO_REDIRECT_URI}}",
+    redirectUri: "{{&COGNITO_REDIRECT_URI}}",
     scope: "{{COGNITO_SCOPES}}",
     state: "{{COGNITO_STATE}}"
   }
