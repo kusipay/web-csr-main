@@ -50,11 +50,11 @@ function Sidebar({
   drawerWidth,
   isSidebarOpen,
   setIsSidebarOpen
-}) {
+}: any) {
   const { pathname } = useLocation();
   const [active, setActive] = useState('');
   const navigate = useNavigate();
-  const theme = useTheme();
+  const theme: any = useTheme();
   console.log(navigate);
   useEffect(() => {
     setActive(pathname.substring(1));
