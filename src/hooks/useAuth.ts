@@ -1,7 +1,19 @@
+import { environment } from "@/environment/environment";
 import { tryFn } from "@/utilities/tryFn";
+import axios from "axios";
 import { useEffect } from "react";
 
-const { domain, clientId, redirectUri, scope, state } = environment.auth;
+interface TokenSet {
+  id_token: string;
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  token_type: string;
+}
+
+const { domain, clientId, scope } = environment.auth;
+
+const state = "login";
 
 const createCodeVerifier = (): string => {
   const array = new Uint8Array(64);
@@ -55,17 +67,13 @@ const makeRequest = async (params: {
   url: string;
   body: URLSearchParams;
   abortController: AbortController;
-}): Promise<number> => {
-  const response = await fetch(params.url, {
-    method: "POST",
-    body: params.body,
+}): Promise<TokenSet> => {
+  const { data } = await axios.post<TokenSet>(params.url, params.body, {
     signal: params.abortController.signal,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }
   });
-
-  const data = await response.json();
 
   return data;
 };
@@ -84,7 +92,7 @@ const evaluateUrlQuery = (
   return [isValid, code];
 };
 
-const useAuth = () => {
+const useAuth = (params: { onTokenSuccess: () => void }) => {
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -97,26 +105,28 @@ const useAuth = () => {
 
       const codeVerifier = sessionStorage.getItem("codeVerifier") || "";
 
+      const currentUrl = window.location.origin;
+
       const { url, body } = createRequestParams({
         clientId,
         code,
-        redirectUri,
+        redirectUri: currentUrl,
         codeVerifier
       });
 
-      const [isOk, err, data] = await tryFn(() =>
+      const [ok, _, data] = await tryFn<TokenSet>(() =>
         makeRequest({ url, body, abortController })
       );
 
       sessionStorage.removeItem("codeVerifier");
 
-      if (!isOk) {
-        console.log("ERROR", { err });
+      if (ok) {
+        sessionStorage.setItem("idToken", data.id_token);
+        sessionStorage.setItem("accessToken", data.access_token);
+        sessionStorage.setItem("refreshToken", data.refresh_token);
 
-        return;
+        params.onTokenSuccess();
       }
-
-      console.log("DATA", { data });
     })();
 
     return () => {
@@ -139,12 +149,14 @@ const useAuth = () => {
 
     sessionStorage.setItem("codeVerifier", codeVerifier);
 
+    const currentUrl = window.location.origin;
+
     const params = [
       `response_type=code`,
       `state=${state}`,
       `client_id=${clientId}`,
       `scope=${scope}`,
-      `redirect_uri=${redirectUri}`,
+      `redirect_uri=${currentUrl}`,
       `code_challenge_method=S256`,
       `code_challenge=${codeChallange}`,
       `code_challenge_method=S256`
@@ -154,7 +166,9 @@ const useAuth = () => {
   };
 
   const onLogout = () => {
-    const params = [`client_id=${clientId}`, `logout_uri=${redirectUri}`].join(
+    const currentUrl = window.location.origin;
+
+    const params = [`client_id=${clientId}`, `logout_uri=${currentUrl}`].join(
       "&"
     );
 

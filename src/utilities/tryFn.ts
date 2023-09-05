@@ -1,6 +1,6 @@
 export type Response<D> =
-  | [isOk: true, error: null, data: D]
-  | [isOk: false, error: unknown, data: null];
+  | [ok: true, error: null, data: D]
+  | [ok: false, error: unknown, data: null];
 
 export const tryFn = async <D = unknown>(
   fn: () => Promise<D>
