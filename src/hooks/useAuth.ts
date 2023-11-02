@@ -1,4 +1,4 @@
-import { environment } from "@/environment/environment";
+import { environment } from "../environment/environment.mustache";
 import { tryFn } from "@/utilities/tryFn";
 import axios from "axios";
 import { useEffect } from "react";

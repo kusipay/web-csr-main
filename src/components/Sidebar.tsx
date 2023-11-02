@@ -1,4 +1,5 @@
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
+
 import {
   Box,
   Drawer,
@@ -9,11 +10,11 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText
-} from '@mui/material';
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import FlexBetween from './FlexBetween';
+} from "@mui/material";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import FlexBetween from "./FlexBetween";
 import {
   ChevronLeft,
   ChevronRightOutlined,
@@ -21,30 +22,31 @@ import {
   HomeOutlined,
   ReceiptLongOutlined,
   ShoppingCartOutlined
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 const navItems = [
   {
-    text: 'Home',
+    text: "Home",
     icon: <HomeOutlined />
   },
   {
-    text: 'Información del cliente',
+    text: "Información del cliente",
     icon: null
   },
   {
-    text: 'Usuarios',
+    text: "Usuarios",
     icon: <Groups2Outlined />
   },
   {
-    text: 'Pagos',
+    text: "Pagos",
     icon: <ShoppingCartOutlined />
   },
   {
-    text: 'Transacciones',
+    text: "Transacciones",
     icon: <ReceiptLongOutlined />
   }
 ];
+
 function Sidebar({
   isNonMobile,
   drawerWidth,
@@ -52,10 +54,11 @@ function Sidebar({
   setIsSidebarOpen
 }: any) {
   const { pathname } = useLocation();
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState("");
   const navigate = useNavigate();
   const theme: any = useTheme();
-  console.log(navigate);
+  console.log(theme);
+
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
@@ -69,11 +72,11 @@ function Sidebar({
           anchor="left"
           sx={{
             width: drawerWidth,
-            '& .MuiDrawer-paper': {
-              color: theme.palette.secondary[200],
+            "& .MuiDrawer-paper": {
+              color: theme.palette.secondary["200"],
               backgroundColor: theme.palette.background.alt,
-              boxSizing: 'border-box',
-              borderWidth: isNonMobile ? 0 : '2px',
+              boxSizing: "border-box",
+              borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth
             }
           }}
@@ -85,7 +88,7 @@ function Sidebar({
                   <Typography
                     variant="h4"
                     fontWeight="bold"
-                    sx={{ textAlign: 'center' }}
+                    sx={{ textAlign: "center" }}
                   >
                     Kusipay
                   </Typography>
@@ -101,7 +104,7 @@ function Sidebar({
               {navItems.map(({ text, icon }) => {
                 if (!icon) {
                   return (
-                    <Typography key={text} sx={{ m: '2.25rem 0 1rem 3rem' }}>
+                    <Typography key={text} sx={{ m: "2.25rem 0 1rem 3rem" }}>
                       {text}
                     </Typography>
                   );
@@ -118,17 +121,17 @@ function Sidebar({
                         backgroundColor:
                           active === lcText
                             ? theme.palette.secondary[300]
-                            : 'transparent',
+                            : "transparent",
                         color:
                           active === lcText
                             ? theme.palette.primary[600]
                             : theme.palette.secondary[100],
-                        p: '8px 0px'
+                        p: "8px 0px"
                       }}
                     >
                       <ListItemIcon
                         sx={{
-                          ml: '2rem',
+                          ml: "2rem",
                           color:
                             active === lcText
                               ? theme.palette.primary[600]
@@ -139,7 +142,7 @@ function Sidebar({
                       </ListItemIcon>
                       <ListItemText primary={text} />
                       {active === lcText && (
-                        <ChevronRightOutlined sx={{ ml: 'auto' }} />
+                        <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
                   </ListItem>
