@@ -10,4 +10,5 @@ export interface RegisterValues {
   endAt: Date | null | number;
   timezoneOffsetMinutes: number;
   frecuencyType: string;
+  monthlyPayment?: number;
 }
