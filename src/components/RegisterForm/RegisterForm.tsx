@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import {
   Button,
@@ -12,6 +12,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { validationSchema } from "@/utilities/registerValidators";
 import { RegisterValues } from "@/models/registerValues";
 import dayjs from "dayjs";
+import FormStatusMessage from "../FormStatusMessage/FormStatusMessage";
 
 const currencies = ["USD", "PEN"];
 const initialValues: RegisterValues = {
@@ -28,10 +29,14 @@ const initialValues: RegisterValues = {
   frecuencyType: ""
 };
 const RegisterForm: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       if (values.startAt) {
         const newStartDate = new Date(values.startAt);
         const epochTime = newStartDate.getTime() / 1000;
@@ -44,8 +49,8 @@ const RegisterForm: React.FC = () => {
       }
       values.frecuencyType = "monthly";
       values.timezoneOffsetMinutes = new Date().getTimezoneOffset();
-      console.log(values);
 
+      setIsSubmitting(true);
       try {
         const response = await fetch(
           "https://o8tl97gvej.execute-api.us-east-1.amazonaws.com/v1/loans",
@@ -58,12 +63,19 @@ const RegisterForm: React.FC = () => {
           }
         );
         if (!response.ok) {
+          setIsError(true);
           throw new Error("Error al enviar el formulario");
+        } else {
+          setIsSuccess(true);
         }
         // const data = await response.json();
       } catch (error) {
         console.log(error);
+        setIsError(true);
+      } finally {
+        setIsSubmitting(false);
       }
+      resetForm();
     }
   });
 
@@ -215,6 +227,11 @@ const RegisterForm: React.FC = () => {
             }}
           />
         </Box>
+        <FormStatusMessage
+          isSubmitting={isSubmitting}
+          isSuccess={isSuccess}
+          isError={isError}
+        />
         <Button
           size="large"
           color="secondary"
